@@ -1,25 +1,23 @@
 public class StateMachine<T> where T: Entity
 {
-    public T Entity{get; private set;}
-    public IState<T> CurrentState{get; private set;}
+    public State<T> CurrentState{get; private set;}
 
-    public StateMachine(T entity, IState<T> firstState){
-        Entity = entity;
+    public StateMachine(State<T> firstState){
         CurrentState = firstState;
     }
 
-    public void SetState(IState<T> state){
-        CurrentState.Exit(Entity);
+    public void SetState(State<T> state){
+        CurrentState.Exit();
         CurrentState = state;
-        CurrentState.Enter(Entity);
+        CurrentState.Enter();
     }
     public void LogicUpdate(){
-        CurrentState.LogicUpdate(Entity);
+        CurrentState.LogicUpdate();
     }
     public void PhysicsUpdate(){
-        CurrentState.PhysicsUpdate(Entity);
+        CurrentState.PhysicsUpdate();
     }
     public void HandleInput(){
-        CurrentState.HandleInput(Entity);
+        CurrentState.HandleInput();
     }
 }

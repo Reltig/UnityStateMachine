@@ -1,45 +1,44 @@
 using UnityEngine;
 
-public class Run : IState<Player>
+public class Run : State<Player>
 {
     private float direction;
-    public Run(){
-        direction = 0;
-    }
-    public Run(float direction){
+
+    public Run(Player entity, float direction) : base(entity){
         this.direction = direction;
     }
-    public override void Enter(Player entity)
+
+    public override void Enter()
     {
-        base.Enter(entity);
-        entity.Animation.Play("run");
+        base.Enter();
+        entity.StartAnimation("run");
         Debug.Log("run");
     }
 
-    public override void Exit(Player entity)
+    public override void Exit()
     {
-        base.Exit(entity);
-        entity.Animation.Stop("run");
+        base.Exit();
+        entity.StopAnimation("run");
     }
 
-    public override void HandleInput(Player entity)
+    public override void HandleInput()
     {
-        base.HandleInput(entity);
+        base.HandleInput();
         direction = Input.GetAxis("Horizontal");
     }
 
-    public override void LogicUpdate(Player entity)
+    public override void LogicUpdate()
     {
-        base.LogicUpdate(entity);
-        if(entity.RigidBody.velocity.x == 0){
-            //entity.StateMachine.SetState(new Idle());
+        base.LogicUpdate();
+        if(entity.GetSpeed().x == 0){
+            entity.StateMachine.SetState(new Idle(entity));
         }
-        Debug.Log(entity.RigidBody.velocity.x==0);
     }
 
-    public override void PhysicsUpdate(Player entity)
+    public override void PhysicsUpdate()
     {
-        base.PhysicsUpdate(entity);
+        base.PhysicsUpdate();
         entity.Move(direction);
     }
+
 }

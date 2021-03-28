@@ -2,38 +2,44 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Idle : IState<Player>
+public class Idle : State<Player>
 {
-    private float direction = 0;
-    public override void Enter(Player entity)
+    private float direction;
+
+    public Idle(Player entity) : base(entity){
+        direction = 0;
+    }
+
+    public override void Enter()
     {
-        base.Enter(entity);
-        entity.Animation.Play("idle");
+        base.Enter();
+        entity.StartAnimation("idle");
         Debug.Log("idle");
     }
 
-    public override void Exit(Player entity)
+    public override void Exit()
     {
-        base.Exit(entity);
-        entity.Animation.Stop("idle");
+        base.Exit();
+        entity.StopAnimation("idle");
     }
 
-    public override void HandleInput(Player entity)
+    public override void HandleInput()
     {
-        base.HandleInput(entity);
+        base.HandleInput();
         direction = Input.GetAxis("Horizontal");
     }
 
-    public override void LogicUpdate(Player entity)
+    public override void LogicUpdate()
     {
-        base.LogicUpdate(entity);
+        base.LogicUpdate();
         if(direction != 0){
-            entity.StateMachine.SetState(new Run(direction));
+            entity.Move(direction);
+            entity.StateMachine.SetState(new Run(entity, direction));
         }
     }
 
-    public override void PhysicsUpdate(Player entity)
+    public override void PhysicsUpdate()
     {
-        base.PhysicsUpdate(entity);
+        base.PhysicsUpdate();
     }
 }

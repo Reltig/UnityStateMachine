@@ -1,9 +1,13 @@
 using UnityEngine;
 
-public abstract class IState<T> where T: Entity{
-    public virtual void Enter(T entity){}
-    public virtual void LogicUpdate(T entity){}
-    public virtual void PhysicsUpdate(T entity){}
-    public virtual void HandleInput(T entity){}
-    public virtual void Exit(T entity){}
+public abstract class State<T> where T: Entity{
+    protected T entity;
+    public State(T entity){
+        this.entity = entity;
+    }
+    public virtual void Enter(){}
+    public virtual void LogicUpdate(){}
+    public virtual void PhysicsUpdate(){}
+    public virtual void HandleInput(){}
+    public virtual void Exit(){}
 }

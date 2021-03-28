@@ -5,27 +5,22 @@ public class Player : Entity
 {
     [SerializeField] private float speed;
     [SerializeField] private float jumpForce;
-    [SerializeField] private int health;
 
-    public Rigidbody2D RigidBody{get; private set;}
-    public Transform Transform{get; private set;}
-    public Animation Animation{get; private set;}
+    private Rigidbody2D _rigidBody;
+    private Transform _transform;
+    private Animation _animation;
     public StateMachine<Player> StateMachine{get; private set;}
-
-    ~Player(){
-        Debug.Log("oh shi//");
-    }
 
 
     void Awake(){
-        RigidBody = GetComponent<Rigidbody2D>();
-        Transform = GetComponent<Transform>();
-        Animation = GetComponent<Animation>();
+        _rigidBody = GetComponent<Rigidbody2D>();
+        _transform = GetComponent<Transform>();
+        _animation = GetComponent<Animation>();
     }
 
     void Start()
     {
-        StateMachine = new StateMachine<Player>(this, new Idle());
+        StateMachine = new StateMachine<Player>(new Idle(this));
     }
     void Update()
     {
@@ -38,16 +33,21 @@ public class Player : Entity
     }
 
     public void Jump(){
-        RigidBody.velocity = new Vector2(RigidBody.velocity.x, jumpForce);
+        _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, jumpForce);
     }
 
     public void Move(float direction){
-        //RigidBody.velocity = new Vector2(direction*speed, RigidBody.velocity.y);
-        RigidBody.AddForce(new Vector2(direction*speed,0));
-        Transform.localScale = new Vector3( Math.Sign(direction) , 1f, 1f);
+        _rigidBody.velocity = new Vector2(direction*speed, _rigidBody.velocity.y);
+        _transform.localScale = new Vector3( Math.Sign(direction) , 1f, 1f);
     }
 
-    public void SetAnimation(String animationName){
-        Animation.Play(animationName);
+    public void StartAnimation(String animationName){
+        _animation.Play(animationName);
+    }
+    public void StopAnimation(String animationName){
+        _animation.Stop(animationName);
+    }
+    public Vector2 GetSpeed(){
+        return _rigidBody.velocity;
     }
 }
